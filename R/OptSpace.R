@@ -100,8 +100,10 @@ OptSpace <- function(A,ropt=NA,niter=50,tol=1e-6,showprogress=TRUE){
       print("* OptSpace: Guessing an implicit rank.")
     }
     r = guess_rank(M_E,nnZ.E)
-    rmessage = sprintf('* OptSpace: Guessing an implicit rank: Estimated rank : %d.',r)
-    print(rmessage)
+    if (showprogress){
+      rmessage = sprintf('* OptSpace: Guessing an implicit rank: Estimated rank : %d.',r)
+      print(rmessage)  
+    }
   } else {
     r = round(ropt)
     if ((!is.numeric(r))||(r<1)||(r>m)||(r>n)){

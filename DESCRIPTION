@@ -1,7 +1,7 @@
 Package: ROptSpace
 Type: Package
 Title: Matrix Reconstruction from a Few Entries
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: person("Kisung", "You", email = "kyou@nd.edu", role = c("aut", "cre"))
 Maintainer: Kisung You <kyou@nd.edu>
 Description: Matrix reconstruction, also known as matrix completion, is
@@ -15,7 +15,7 @@ LazyData: true
 Imports: stats
 RoxygenNote: 6.0.1
 NeedsCompilation: no
-Packaged: 2017-09-05 13:58:31 UTC; kisung
+Packaged: 2017-09-06 02:19:29 UTC; kisung
 Author: Kisung You [aut, cre]
 Repository: CRAN
-Date/Publication: 2017-09-05 14:07:07 UTC
+Date/Publication: 2017-09-06 12:15:46 UTC

@@ -7,7 +7,7 @@
 OptSpace(A, ropt = NA, niter = 50, tol = 1e-06, showprogress = TRUE)
 }
 \arguments{
-\item{A}{an \code{(n-by-m)} matrix whose missing entries should be flaged as NA.}
+\item{A}{an \eqn{(n\times m)} matrix whose missing entries should be flaged as NA.}
 
 \item{ropt}{\code{NA} to guess the rank, or a positive integer as a pre-defined rank.}
 
@@ -20,19 +20,19 @@ OptSpace(A, ropt = NA, niter = 50, tol = 1e-06, showprogress = TRUE)
 \value{
 a named list containing
 \describe{
-\item{X}{an \code{(n-by-r)} matrix as left singular vectors.}
-\item{S}{an \code{(r-by-y)} matrix as singular values.}
-\item{Y}{an \code{(m-by-r)} matrix as right singular vectors.}
+\item{X}{an \eqn{(n \times r)} matrix as left singular vectors.}
+\item{S}{an \eqn{(r \times r)} matrix as singular values.}
+\item{Y}{an \eqn{(m \times r)} matrix as right singular vectors.}
 \item{dist}{a vector containing reconstruction errors at each successive iteration.}
 }
 }
 \description{
-Let's assume an ideal matrix \eqn{M} with \code{(m-by-n)} entries with rank \code{r} and
+Let's assume an ideal matrix \eqn{M} with \eqn{(m\times n)} entries with rank \eqn{r} and
 we are given a partially observed matrix \eqn{M\_E} which contains many missing entries.
 Matrix reconstruction - or completion - is the task of filling in such entries.
 OptSpace is an efficient algorithm that reconstructs \eqn{M} from \eqn{|E|=O(rn)} observed elements
 with relative root mean square error (RMSE)
-\deqn{RMSE \le C(\alpha)\sqrt{nr/|E|}}.
+\deqn{RMSE \le C(\alpha)\sqrt{nr/|E|}}
 }
 \section{Acknowledgements}{
 
@@ -80,8 +80,7 @@ print(m2)
 
 }
 \references{
-Keshavan, R.H., Montanari, A., and Oh, S. (2009) \emph{Matrix Completion
-from a Few Entries}. Arxiv:0901.3150.
+\insertRef{keshavan_matrix_2010}{ROptSpace}
 }
 \author{
 Kisung You

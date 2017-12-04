@@ -1,18 +1,18 @@
 #' OptSpace : an algorithm for matrix reconstruction from a partially revealed set
 #'
-#' Let's assume an ideal matrix \eqn{M} with \code{(m-by-n)} entries with rank \code{r} and
+#' Let's assume an ideal matrix \eqn{M} with \eqn{(m\times n)} entries with rank \eqn{r} and
 #' we are given a partially observed matrix \eqn{M\_E} which contains many missing entries.
 #' Matrix reconstruction - or completion - is the task of filling in such entries.
 #' OptSpace is an efficient algorithm that reconstructs \eqn{M} from \eqn{|E|=O(rn)} observed elements
 #' with relative root mean square error (RMSE)
-#' \deqn{RMSE \le C(\alpha)\sqrt{nr/|E|}}.
+#' \deqn{RMSE \le C(\alpha)\sqrt{nr/|E|}}
 #'
 #' @section Acknowledgements:
 #' This code is a modified translation of
 #' \href{http://swoh.web.engr.illinois.edu/software/optspace/code.html}{MATLAB package}
 #' maintained by Sewoong Oh (UIUC).
 #'
-#' @param A an \code{(n-by-m)} matrix whose missing entries should be flaged as NA.
+#' @param A an \eqn{(n\times m)} matrix whose missing entries should be flaged as NA.
 #' @param ropt \code{NA} to guess the rank, or a positive integer as a pre-defined rank.
 #' @param niter maximum number of iterations allowed.
 #' @param tol stopping criterion for reconstruction in Frobenius norm.
@@ -20,15 +20,15 @@
 #'
 #' @return a named list containing
 #' \describe{
-#' \item{X}{an \code{(n-by-r)} matrix as left singular vectors.}
-#' \item{S}{an \code{(r-by-y)} matrix as singular values.}
-#' \item{Y}{an \code{(m-by-r)} matrix as right singular vectors.}
+#' \item{X}{an \eqn{(n \times r)} matrix as left singular vectors.}
+#' \item{S}{an \eqn{(r \times r)} matrix as singular values.}
+#' \item{Y}{an \eqn{(m \times r)} matrix as right singular vectors.}
 #' \item{dist}{a vector containing reconstruction errors at each successive iteration.}
 #' }
 #'
 #'
-#' @references Keshavan, R.H., Montanari, A., and Oh, S. (2009) \emph{Matrix Completion
-#' from a Few Entries}. Arxiv:0901.3150.
+#' @references
+#' \insertRef{keshavan_matrix_2010}{ROptSpace}
 #'
 #' @examples
 #' ## Parameter Settings
@@ -102,7 +102,7 @@ OptSpace <- function(A,ropt=NA,niter=50,tol=1e-6,showprogress=TRUE){
     r = guess_rank(M_E,nnZ.E)
     if (showprogress){
       rmessage = sprintf('* OptSpace: Guessing an implicit rank: Estimated rank : %d.',r)
-      print(rmessage)  
+      print(rmessage)
     }
   } else {
     r = round(ropt)

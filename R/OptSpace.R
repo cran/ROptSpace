@@ -67,8 +67,8 @@
 #' print(m1)
 #' print(m2)
 #'
-#' @author Kisung You
-#' @import stats
+#' @importFrom utils packageVersion
+#' @import stats Rdpack
 #' @export
 OptSpace <- function(A,ropt=NA,niter=50,tol=1e-6,showprogress=TRUE){
   ## Preprocessing : A     : partially revelaed matrix

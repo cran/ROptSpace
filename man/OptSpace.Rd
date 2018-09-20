@@ -4,7 +4,8 @@
 \alias{OptSpace}
 \title{OptSpace : an algorithm for matrix reconstruction from a partially revealed set}
 \usage{
-OptSpace(A, ropt = NA, niter = 50, tol = 1e-06, showprogress = TRUE)
+OptSpace(A, ropt = NA, niter = 50, tol = 1e-06,
+  showprogress = TRUE)
 }
 \arguments{
 \item{A}{an \eqn{(n\times m)} matrix whose missing entries should be flaged as NA.}
@@ -81,7 +82,4 @@ print(m2)
 }
 \references{
 \insertRef{keshavan_matrix_2010}{ROptSpace}
-}
-\author{
-Kisung You
 }

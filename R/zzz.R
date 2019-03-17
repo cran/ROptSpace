@@ -10,8 +10,8 @@
   ## Print on Screen
   packageStartupMessage("** ROptSpace")
   packageStartupMessage("**  - Matrix Reconstruction from a Few Entries")
-  packageStartupMessage("** Version    : ",this.version," (",this.year,")",sep="")
-  packageStartupMessage("** Maintainer : Kisung You (kyou@nd.edu)")
+  packageStartupMessage("** Version    : ",this.version,"      (",this.year,")",sep="")
+  packageStartupMessage("** Maintainer : Kisung You (ksyou496@gmail.com)")
   packageStartupMessage("**")
   packageStartupMessage("** Please share any bugs or suggestions to the maintainer.")
 }

@@ -1,4 +1,5 @@
 # Aux 1 : guess_rank for r ------------------------------------------------
+#' @keywords internal
 guess_rank <- function(X,nnz){
   maxiter = 10000
   n = nrow(X)
@@ -6,7 +7,7 @@ guess_rank <- function(X,nnz){
   epsilon = nnz/sqrt(m*n)
   svdX = svd(X)
   S0 = svdX$d
-
+  
   nsval0 = length(S0)
   S1 = S0[1:(nsval0-1)]-S0[2:nsval0]
   nsval1 = length(S1)
@@ -17,7 +18,7 @@ guess_rank <- function(X,nnz){
   }
   r1 = 0
   lam = 0.05
-
+  
   itcounter = 0
   while (r1<=0){
     itcounter = itcounter+1
@@ -37,7 +38,7 @@ guess_rank <- function(X,nnz){
       break
     }
   }
-
+  
   if (itcounter<=maxiter){
     cost2 = array(0,c(1,(length(S0)-1)))
     for (idx in 1:(length(S0)-1)){
@@ -50,7 +51,7 @@ guess_rank <- function(X,nnz){
     } else {
       r2 = max(i2)
     }
-
+    
     if (r1>r2){
       r = r1
     } else {
@@ -64,6 +65,7 @@ guess_rank <- function(X,nnz){
 
 
 # Aux 2 : compute the distortion ------------------------------------------
+#' @keywords internal
 aux_G <- function(X,m0,r){
   z = rowSums(X^2)/(2*m0*r)
   y = exp((z-1)^2) - 1
@@ -72,10 +74,11 @@ aux_G <- function(X,m0,r){
   out = sum(y)
   return(out)
 }
+#' @keywords internal
 aux_F_t <- function(X,Y,S,M_E,E,m0,rho){
   n = nrow(X)
   r = ncol(X)
-
+  
   out1 = (sum((((X%*%S%*%t(Y))-M_E)*E)^2))/2
   out2 = rho*aux_G(Y,m0,r)
   out3 = rho*aux_G(X,m0,r)
@@ -85,14 +88,16 @@ aux_F_t <- function(X,Y,S,M_E,E,m0,rho){
 
 
 # Aux 3 : compute the gradient --------------------------------------------
+#' @keywords internal
 aux_Gp <- function(X,m0,r){
   z = rowSums(X^2)/(2*m0*r)
   z = 2*exp((z-1)^2)/(z-1)
   idxfind = (z<0)
   z[idxfind] = 0
-
+  
   out = (X*matrix(z,nrow=nrow(X),ncol=ncol(X),byrow=FALSE))/(m0*r)
 }
+#' @keywords internal
 aux_gradF_t <- function(X,Y,S,M_E,E,m0,rho){
   n = nrow(X)
   r = ncol(X)
@@ -100,17 +105,17 @@ aux_gradF_t <- function(X,Y,S,M_E,E,m0,rho){
   if (ncol(Y)!=r){
     stop("dimension error from aux_gradF_t")
   }
-
+  
   XS  = (X%*%S)
   YS  = (Y%*%t(S))
   XSY = (XS%*%t(Y))
-
+  
   Qx = ((t(X) %*% ((M_E-XSY)*E) %*% YS)/n)
   Qy = ((t(Y) %*% t((M_E-XSY)*E) %*% XS)/m)
-
+  
   W = (((XSY-M_E)*E) %*% YS) + (X%*%Qx) + rho*aux_Gp(X,m0,r)
   Z = (t((XSY-M_E)*E) %*% XS)+ (Y%*%Qy) + rho*aux_Gp(Y,m0,r)
-
+  
   resgrad = list()
   resgrad$W = W
   resgrad$Z = Z
@@ -119,31 +124,33 @@ aux_gradF_t <- function(X,Y,S,M_E,E,m0,rho){
 
 
 # Aux 4 : Sopt given X and Y ----------------------------------------------
+#' @keywords internal
 aux_getoptS <- function(X,Y,M_E,E){
   n = nrow(X)
   r = ncol(X)
-
+  
   C = (t(X) %*% (M_E) %*% Y)
   C = matrix(as.vector(C))
-
+  
   nnrow = ncol(X)*ncol(Y)
   A = matrix(NA,nrow=nnrow,ncol=(r^2))
-
+  
   for (i in 1:r){
     for (j in 1:r){
       ind = ((j-1)*r+i)
       tmp = t(X) %*% (outer(X[,i],Y[,j])*E) %*% Y
-
+      
       A[,ind] = as.vector(tmp)
     }
   }
-
+  
   S = solve(A,C)
   out = matrix(S,nrow=r)
   return(out)
 }
 
 # Aux 5 : optimal line search ---------------------------------------------
+#' @keywords internal
 aux_getoptT <- function(X,W,Y,Z,S,M_E,E,m0,rho){
   norm2WZ = (norm(W,'f')^2)+(norm(Z,'f')^2)
   f = array(0,c(1,21))
@@ -160,6 +167,3 @@ aux_getoptT <- function(X,W,Y,Z,S,M_E,E,m0,rho){
   out = t
   return(t)
 }
-
-
-

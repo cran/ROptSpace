@@ -3,4 +3,6 @@
 export(OptSpace)
 import(Rdpack)
 import(stats)
+importFrom(Rcpp,evalCpp)
 importFrom(utils,packageVersion)
+useDynLib(ROptSpace)

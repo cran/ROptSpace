@@ -4,8 +4,7 @@
 \alias{OptSpace}
 \title{OptSpace : an algorithm for matrix reconstruction from a partially revealed set}
 \usage{
-OptSpace(A, ropt = NA, niter = 50, tol = 1e-06,
-  showprogress = TRUE)
+OptSpace(A, ropt = NA, niter = 50, tol = 1e-06, showprogress = TRUE)
 }
 \arguments{
 \item{A}{an \eqn{(n\times m)} matrix whose missing entries should be flaged as NA.}
@@ -35,13 +34,6 @@ OptSpace is an efficient algorithm that reconstructs \eqn{M} from \eqn{|E|=O(rn)
 with relative root mean square error (RMSE)
 \deqn{RMSE \le C(\alpha)\sqrt{nr/|E|}}
 }
-\section{Acknowledgements}{
-
-This code is a modified translation of
-\href{http://swoh.web.engr.illinois.edu/software/optspace/code.html}{MATLAB package}
-maintained by Sewoong Oh (UIUC).
-}
-
 \examples{
 ## Parameter Settings
 n = 1000;

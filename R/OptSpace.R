@@ -7,11 +7,6 @@
 #' with relative root mean square error (RMSE)
 #' \deqn{RMSE \le C(\alpha)\sqrt{nr/|E|}}
 #'
-#' @section Acknowledgements:
-#' This code is a modified translation of
-#' \href{http://swoh.web.engr.illinois.edu/software/optspace/code.html}{MATLAB package}
-#' maintained by Sewoong Oh (UIUC).
-#'
 #' @param A an \eqn{(n\times m)} matrix whose missing entries should be flaged as NA.
 #' @param ropt \code{NA} to guess the rank, or a positive integer as a pre-defined rank.
 #' @param niter maximum number of iterations allowed.
@@ -67,8 +62,6 @@
 #' print(m1)
 #' print(m2)
 #'
-#' @importFrom utils packageVersion
-#' @import stats Rdpack
 #' @export
 OptSpace <- function(A,ropt=NA,niter=50,tol=1e-6,showprogress=TRUE){
   ## Preprocessing : A     : partially revelaed matrix
@@ -84,25 +77,24 @@ OptSpace <- function(A,ropt=NA,niter=50,tol=1e-6,showprogress=TRUE){
   idxna = (is.na(A))
   M_E = array(0,c(nrow(A),ncol(A)))
   M_E[!idxna] = A[!idxna]
-
+  
   ## Preprocessing : size information
   n = nrow(A)
   m = ncol(A)
-
+  
   ## Preprocessing : other sparse-related concepts
   nnZ.E = sum(!idxna)
   E = array(0,c(nrow(A),ncol(A))); E[!idxna] = 1
   eps = nnZ.E/sqrt(m*n)
-
+  
   ## Preprocessing : ropt  : implied rank
   if (is.na(ropt)){
     if (showprogress){
       print("* OptSpace: Guessing an implicit rank.")
     }
-    r = guess_rank(M_E,nnZ.E)
+    r = min(max(round(guess_rank(M_E,nnZ.E)), 2), m-1)
     if (showprogress){
-      rmessage = sprintf('* OptSpace: Guessing an implicit rank: Estimated rank : %d.',r)
-      print(rmessage)
+      print(paste0('* OptSpace: Guessing an implicit rank: Estimated rank : ',r))
     }
   } else {
     r = round(ropt)
@@ -115,14 +107,14 @@ OptSpace <- function(A,ropt=NA,niter=50,tol=1e-6,showprogress=TRUE){
     stop("* OptSpace: invalid niter number.")
   }
   niter = round(niter)
-
+  
   m0 = 10000
   rho = 0
-
+  
   ## Main Computation
   rescal_param = sqrt(nnZ.E*r/(norm(M_E,'f')^2))
   M_E = M_E*rescal_param
-
+  
   # 1. Trimming
   if (showprogress){
     print("* OptSpace: Step 1: Trimming ...")
@@ -137,7 +129,7 @@ OptSpace <- function(A,ropt=NA,niter=50,tol=1e-6,showprogress=TRUE){
       M_Et[listed[p[ceiling(2*d_)]]:n,col] = 0
     }
   }
-
+  
   d  = rowSums(E)
   d_ = mean(d)
   for (row in 1:n){
@@ -147,16 +139,16 @@ OptSpace <- function(A,ropt=NA,niter=50,tol=1e-6,showprogress=TRUE){
       M_Et[row,listed[p[ceiling(2*d_)]]:m] = 0
     }
   }
-
+  
   # 2. SVD
   if (showprogress){
     print("* OptSpace: Step 2: SVD ...")
   }
   svdEt = svd(M_Et)
   X0 = svdEt$u[,1:r]
-  S0 = diag(svdEt$d)[1:r]
+  S0 = diag(svdEt$d[1:r])
   Y0 = svdEt$v[,1:r]
-
+  
   # 3. Initial Guess
   if (showprogress){
     print("* OptSpace: Step 3: Initial Guess ...")
@@ -164,7 +156,7 @@ OptSpace <- function(A,ropt=NA,niter=50,tol=1e-6,showprogress=TRUE){
   X0 = X0*sqrt(n)
   Y0 = Y0*sqrt(m)
   S0 = S0/eps
-
+  
   # 4. Gradient Descent
   if (showprogress){
     print("* OptSpace: Step 4: Gradient Descent ...")
@@ -172,7 +164,7 @@ OptSpace <- function(A,ropt=NA,niter=50,tol=1e-6,showprogress=TRUE){
   X = X0
   Y = Y0
   S = aux_getoptS(X,Y,M_E,E)
-
+  
   # initialize
   dist = array(0,c(1,(niter+1)))
   dist[1] = norm((M_E - (X%*%S%*%t(Y)))*E,'f')/sqrt(nnZ.E)
@@ -181,27 +173,27 @@ OptSpace <- function(A,ropt=NA,niter=50,tol=1e-6,showprogress=TRUE){
     tmpgrad = aux_gradF_t(X,Y,S,M_E,E,m0,rho)
     W = tmpgrad$W
     Z = tmpgrad$Z
-
+    
     # line search for the optimum jump length
     t = aux_getoptT(X,W,Y,Z,S,M_E,E,m0,rho)
     X = X+t*W;
     Y = Y+t*Z;
     S = aux_getoptS(X,Y,M_E,E)
-
+    
     # compute the distortion
     dist[i+1] = norm(((M_E - X%*%S%*%t(Y))*E),'f')/sqrt(nnZ.E)
     if (showprogress){
       pmsg=sprintf('* OptSpace: Step 4: Iteration %d: distortion: %e',i,dist[i+1])
     }
-
+    
     if (dist[i+1]<tol){
       dist = dist[1:(i+1)]
       break
     }
   }
   S = S/rescal_param
-
-
+  
+  
   # Return Results
   out = list()
   out$X = X
